@@ -44,28 +44,49 @@ public class ToysBox {
     }
 
 
-
-    public UUID get_ID_by_cost(int marker,ToysList toysList) {
-        for (Toy toy: toys_list){
+    public UUID get_ID_by_cost(int marker, ToysPrizesList toysPrizesList) {
+        for (Toy toy : toys_list) {
             int cost = toy.get_Cost();
-            if (cost<marker) continue;
+            if (cost < marker) continue;
             UUID id = toy.get_id();
-            if (!toysList.contains(id)) return id;
+            if (!toysPrizesList.contains(id)) return id;
         }
         return null;
     }
 
-    public void del_by_id(UUID id){
+    public void del_by_id(UUID id) {
         Iterator<Toy> iterator = this.toys_list.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Toy toy = iterator.next();
-            if (toy.get_id().equals(id)){
-                this.count.put(toy.get_name(),this.count.get(toy.get_name())-1);
-                if (this.count.get(toy.get_name())==0){this.count.remove(toy.get_name());}
+            if (toy.get_id().equals(id)) {
+                this.count.put(toy.get_name(), this.count.get(toy.get_name()) - 1);
+                if (this.count.get(toy.get_name()) == 0) {
+                    this.count.remove(toy.get_name());
+                }
                 iterator.remove();
                 return;
             }
         }
+        this.update_statistic();
     }
 
+    public Toy get_by_index(int i) {
+        return this.toys_list.get(i);
+    }
+
+    public void update_by_index(int i, Toy toy) {
+        Function.viewToy(toy);
+        this.toys_list.add(toy);
+        this.toys_list.remove(i);
+    }
+
+    public void update_statistic() {
+        this.cost = new HashMap<>();
+        this.count = new HashMap<>();
+        for (Toy toy : toys_list) {
+            count.merge(toy.get_name(), 1, Integer::sum);
+            cost.put(toy.get_name(), toy.get_Cost());
+        }
+
+    }
 }

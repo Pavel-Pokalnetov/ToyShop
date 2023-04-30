@@ -26,4 +26,8 @@ public class Toy {
     public UUID get_id() {
         return id;
     }
+
+    public void set_cost(int newCost) {
+        this.cost = newCost;
+    }
 }

@@ -1,13 +1,12 @@
 package ToyShop;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.UUID;
 
-public class ToysList {
+public class ToysPrizesList {
     private ArrayList<UUID> toys_list;
 
-    public ToysList() {
+    public ToysPrizesList() {
         this.clean();
     }
 
