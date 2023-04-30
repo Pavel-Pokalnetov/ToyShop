@@ -39,8 +39,8 @@ public class ToysBox {
         return this.toys_list.size();
     }
 
-    public HashMap<String, Integer> view_count() {
-        return (HashMap<String, Integer>) count;
+    public HashMap<String, Integer> getCount() {
+        return count;
     }
 
 
@@ -88,5 +88,9 @@ public class ToysBox {
             cost.put(toy.get_name(), toy.get_Cost());
         }
 
+    }
+
+    public ArrayList<Toy> get_toys_list() {
+        return this.toys_list;
     }
 }

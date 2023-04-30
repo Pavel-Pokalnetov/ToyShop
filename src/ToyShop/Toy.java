@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class Toy {
 
-    private String name;
+    private final String name;
     private int cost;
-    private UUID id;
+    private final UUID id;
 
 
     public Toy(String name, int cost) {

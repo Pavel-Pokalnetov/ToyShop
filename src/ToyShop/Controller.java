@@ -2,7 +2,7 @@ package ToyShop;
 
 public class Controller {
     private ToysPrizesList toysPrizesList;
-    private  ToysBox toysBox;
+    private ToysBox toysBox;
 
     public Controller() throws InterruptedException {
         toysBox = new ToysBox();
@@ -28,7 +28,7 @@ public class Controller {
                     Function.viewBox(this.toysBox);
                     break;
                 case "2":
-                    Function.viewList(this.toysPrizesList,this.toysBox);
+                    Function.viewList(this.toysPrizesList, this.toysBox);
                     break;
                 case "3":
                     Function.add_Toys_to_Box(this.toysBox);
@@ -38,16 +38,17 @@ public class Controller {
                     break;
                 case "5":
                     this.toysPrizesList.clean();
-                    Function.make_List_Toys(this.toysPrizesList,this.toysBox);
+                    Function.make_List_Toys(this.toysPrizesList, this.toysBox);
+                    Function.viewList(this.toysPrizesList, this.toysBox);
                     break;
                 case "6":
-                    Function.get_Toy_to_Bayer(this.toysPrizesList,this.toysBox);
+                    Function.get_Toy_to_Bayer(this.toysPrizesList, this.toysBox);
                     break;
                 case "7":
-                    Function.clean_Box(this.toysBox,this.toysPrizesList);
+                    Function.clean_Box(this.toysBox, this.toysPrizesList);
                     break;
                 case "8":
-                    Function.save_List_Toys_to_File(this.toysPrizesList,this.toysBox);
+                    Function.save_List_Toys_to_File(this.toysPrizesList, this.toysBox);
                     break;
                 case "Q":
                     return;

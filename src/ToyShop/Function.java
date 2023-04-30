@@ -40,9 +40,10 @@ public class Function {
         System.out.printf("Всего в коробке: %d игрушек\n\n", box.size());
 
     }
-    public static void viewToy(Toy toy){
-        System.out.printf("Название: %s\n",toy.get_name());
-        System.out.printf("Вес: %d\n",toy.get_Cost());
+
+    public static void viewToy(Toy toy) {
+        System.out.printf("Название: %s\n", toy.get_name());
+        System.out.printf("Вес: %d\n", toy.get_Cost());
     }
 
     public static void viewBox(ToysBox toysBox) {
@@ -50,17 +51,17 @@ public class Function {
         if (toysBox.size() < 1) {
             return;
         }
-        HashMap<String, Integer> output = toysBox.view_count();
-        int n=1;
+        HashMap<String, Integer> output = toysBox.getCount();
+        int n = 1;
         for (Map.Entry<String, Integer> entry : output.entrySet()) {
             String name = entry.getKey();
             Integer quantity = entry.getValue();
             Integer cost = toysBox.cost.get(name);
-            System.out.printf("%d - %s, %d шт., вес: %d %%;\n",n++, name, quantity, cost);
+            System.out.printf("%d - %s, %d шт., вес: %d %%;\n", n++, name, quantity, cost);
         }
     }
 
-    public static ToysPrizesList viewList(ToysPrizesList toysPrizesList, ToysBox toysBox) {
+    public static void viewList(ToysPrizesList toysPrizesList, ToysBox toysBox) {
         System.out.printf("В списке на выдачу %d позиций:\n", toysPrizesList.size());
         int n = 1;
         for (UUID id : toysPrizesList.get_list()) {
@@ -69,30 +70,28 @@ public class Function {
                 System.out.printf(" %d - %s;\n", n++, toy.get_name());
             }
         }
-        return toysPrizesList;
     }
 
-    public static ToysPrizesList make_List_Toys(ToysPrizesList toysPrizesList, ToysBox toysBox) throws InterruptedException {
-        int quant;
+    public static void make_List_Toys(ToysPrizesList toysPrizesList, ToysBox toysBox) {
+        int quantity;
         while (true) {
             System.out.printf("В коробке %d игрушек.\n", toysBox.size());
             try {
-                quant = Integer.parseInt(KeyScanner.getText("сколько возьмем на подарки?: "));
+                quantity = Integer.parseInt(KeyScanner.getText("сколько возьмем на подарки?: "));
             } catch (NumberFormatException e) {
                 System.out.println("Неверный ввод. Отмена");
-                return new ToysPrizesList();
+                return;
             }
-            if (quant == 0) {
+            if (quantity == 0) {
                 System.out.println("Отмена");
-            } else if (quant > toysBox.size()) {
+            } else if (quantity > toysBox.size()) {
                 System.out.println("У нас нет столько игрушек!");
-                Thread.sleep(3000);
                 continue;
             }
             break;
         }
         Random rnd = new Random();
-        for (int i = 0; i < quant; i++) {
+        for (int i = 0; i < quantity; i++) {
             boolean fl = true;
             while (fl) {
                 int marker = rnd.nextInt(99) + 1;
@@ -103,7 +102,6 @@ public class Function {
                 }
             }
         }
-        return toysPrizesList;
     }
 
 
@@ -129,7 +127,7 @@ public class Function {
     }
 
     public static void save_List_Toys_to_File(ToysPrizesList toysPrizesList, ToysBox toysBox) {
-        if (toysPrizesList.size()==0){
+        if (toysPrizesList.size() == 0) {
             System.out.println("Список еще не подготовлен. Выполните формирование списка на выдачу.");
             return;
         }
@@ -138,14 +136,17 @@ public class Function {
             System.out.println("Отмена записи");
         }
         StringBuilder text = new StringBuilder("Товары для выдачи в качестве подарка:\n");
-        int n=1;
+        int n = 1;
         for (UUID id : toysPrizesList.get_list()) {
-            text.append(String.format("%d - %s\n",n++,toysBox.get_toy_by_id(id).get_name()));
+            text.append(String.format("%d - %s\n", n++, toysBox.get_toy_by_id(id).get_name()));
         }
-        try (FileWriter writer = new FileWriter(filename, false)) {
+        try {
+            assert filename != null;
+            try (FileWriter writer = new FileWriter(filename, false)) {
 
-            writer.write(text.toString());
-            writer.flush();
+                writer.write(text.toString());
+                writer.flush();
+            }
         } catch (IOException ex) {
 
             System.out.println(ex.getMessage());
@@ -153,14 +154,14 @@ public class Function {
     }
 
     public static void edit_Toys_cost(ToysBox toysBox) {
-        System.out.println("Измененме \"веса\" игрушки");
+        System.out.println("Изменение \"веса\" игрушки");
         Function.viewBox(toysBox);
         String text = KeyScanner.getText("Какую игрушку изменяем? Укажите номер игрушки для изменения, 0 или пусто для отмены: ");
         if ("0".equals(text)) return;
-        int num = 0;
+        int num;
         try {
             num = Integer.parseInt(text);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Неверный ввод. Отмена");
             return;
         }
@@ -171,18 +172,22 @@ public class Function {
         num--;
         Toy toy = toysBox.get_by_index(num);
         Function.viewToy(toy);
-        int new_cost=0;
-        try{
+        int new_cost;
+        try {
             new_cost = Integer.parseInt(KeyScanner.getText("Введите новую стоимость: "));
-            if (new_cost>100 || new_cost<1){
+            if (new_cost > 100 || new_cost < 1) {
                 throw new NumberFormatException();
             }
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Неверный ввод.\nОжидается целое число от 1 до 100.\nОтмена");
             return;
         }
-        toy.set_cost(new_cost);
-        toysBox.update_by_index(num,toy);
+        String toy_name = toy.get_name();
+        for (Toy _toy: toysBox.get_toys_list()) {
+            if (toy_name.equals(_toy.get_name())){
+                _toy.set_cost(new_cost);
+            }
+        }
         toysBox.update_statistic();
         System.out.println("Изменения внесены.");
         Function.viewBox(toysBox);

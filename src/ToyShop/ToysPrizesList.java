@@ -7,7 +7,7 @@ public class ToysPrizesList {
     private ArrayList<UUID> toys_list;
 
     public ToysPrizesList() {
-        this.clean();
+            this.clean();
     }
 
     public boolean add(UUID id) {
@@ -33,7 +33,7 @@ public class ToysPrizesList {
         int i = toys_list.size() - 1;
         UUID[] result = new UUID[i + 1];
         for (UUID id : toys_list) {
-            result[i]=id;
+            result[i] = id;
             i--;
         }
         return result;
